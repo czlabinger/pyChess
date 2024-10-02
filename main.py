@@ -93,7 +93,7 @@ def main():
     node.tpdo[3001][0] = 1
     node.tpdo.save()
 
-    for move : get_moves():
+    for move in get_moves():
         node.tpdo[3001][0] = move
         node.tpdo.save()
 
@@ -119,8 +119,8 @@ def get_moves(cur, dest):
     moves = []
     
     if cur[0] != dest[0]:
-       direction = 2 if dest[0] > cur[0] eles 3
-       steps = abs(ord(dset[0]) = ord(cur[0]))
+       direction = 2 if dest[0] > cur[0] else 3
+       steps = abs(ord(dset[0]) - ord(cur[0]))
        for step in steps:
            moves.append(step)
 
