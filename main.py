@@ -89,26 +89,50 @@ def main():
     node.tpdo[3000][0][6] = 0 # Satzselektion
     node.tpdo.save()
 
-    # 2.
-    node.tpdo[3001][0] = 3 # Satznummer z.B.: 3
+    # 2. (Move to A1)
+    node.tpdo[3001][0] = 1
     node.tpdo.save()
 
-    # 3.
-    node.tpdo[3000][1][1] = 1 # START = 1
-    node.tpdo.save()
+    for move : get_moves():
+        node.tpdo[3001][0] = move
+        node.tpdo.save()
 
-    #DONE: CHECK SPOS 2 = 0
-    print(node.sdo[0x3020][1][2])
+        # 3.
+        node.tpdo[3000][1][1] = 1 # START = 1
+        node.tpdo.save()
 
-    #DONE: WAIT SPOS 2 = 1
-    wait(lambda: wait_until(node.sdo[0x3020][1][2], 1), timeout_seconds=120, waiting_for="SPOS 2 = 1 (MC = 1)") # Fahrt zu ende
+        #DONE: CHECK SPOS 2 = 0
+        print(node.sdo[0x3020][1][2])
 
-    # 4.
-    #DONE: WAIT SPOS 1 = 1
-    wait(lambda: wait_until(node.sdo[0x3020][1][1], 1), timeout_seconds=120, waiting_for="SPOS 1 = 1 (ACK = 1)")
-    node.tpdo[3000][1][1] = 0 # START = 0
+        #DONE: WAIT SPOS 2 = 1
+        wait(lambda: wait_until(node.sdo[0x3020][1][2], 1), timeout_seconds=120, waiting_for="SPOS 2 = 1 (MC = 1)") # Fahrt zu ende
+
+        # 4.
+        #DONE: WAIT SPOS 1 = 1
+        wait(lambda: wait_until(node.sdo[0x3020][1][1], 1), timeout_seconds=120, waiting_for="SPOS 1 = 1 (ACK = 1)")
+        node.tpdo[3000][1][1] = 0 # START = 0
 
     network.disconnect()
+
+# 2 -> Right, 3 -> Left, 4 -> Up, 5 -> Down
+def get_moves(cur, dest):
+    moves = []
+    
+    if cur[0] != dest[0]:
+       direction = 2 if dest[0] > cur[0] eles 3
+       steps = abs(ord(dset[0]) = ord(cur[0]))
+       for step in steps:
+           moves.append(step)
+
+    if cur[1] != dest[1]:
+        direction = 4 if dest[1] > cur[1] else 5
+        steps = abs(int(dest[1]) - int(cur[1]))
+        for step in steps:
+            moves.append(step)
+
+    return moves
+
+
 
 if __name__ == "__main__":
     main()
